@@ -2,7 +2,7 @@
 
 A CLI-based background job queue system built with Python, featuring automatic retries with exponential backoff, Dead Letter Queue (DLQ) management, and persistent storage using SQLite.
 
-[![Watch the demo](.\video.mp4)](.\video.mp4)
+[![Watch the demo](./video.mp4)](./video.mp4)
 
 
 ## Features

@@ -165,21 +165,23 @@ class WorkerManager:
         for i in range(count):
             worker_id = f"worker-{i+1}-{int(time.time())}"
             
-            # Create worker process
+            # Create worker process as daemon so parent can exit immediately
             process = multiprocessing.Process(
                 target=self._run_worker,
-                args=(worker_id,)
+                args=(worker_id,),
+                daemon=True  # Allow parent to exit without waiting
             )
             process.start()
             
-            self.processes.append(process)
+            # Don't keep reference to process object to allow it to run independently
             pids.append(process.pid)
             
             self.logger.info(f"Started worker {worker_id} (PID: {process.pid})")
         
-        # Save PIDs to file
+        # Save PIDs to file for later stop command
         save_worker_pids(pids)
         
+        # Return immediately without joining processes
         return {
             'success': True,
             'message': f'Started {count} worker(s)',

@@ -145,10 +145,14 @@ class Storage:
             
             job = self._row_to_dict(row)
             
-            # Mark as processing
+            # Mark as processing and increment attempts atomically
             cursor.execute("""
                 UPDATE jobs 
-                SET state = ?, worker_id = ?, started_at = ?, updated_at = ?
+                SET state = ?, 
+                    worker_id = ?, 
+                    started_at = ?, 
+                    updated_at = ?,
+                    attempts = attempts + 1
                 WHERE id = ? AND (worker_id IS NULL OR worker_id = '')
             """, (JobState.PROCESSING, worker_id, now, now, job['id']))
             
@@ -156,6 +160,7 @@ class Storage:
             if cursor.rowcount > 0:
                 job['state'] = JobState.PROCESSING
                 job['worker_id'] = worker_id
+                job['attempts'] = job['attempts'] + 1  # Update in-memory value
                 return job
             
         return None
@@ -181,16 +186,15 @@ class Storage:
             
             return cursor.rowcount > 0
     
-    def increment_job_attempts(self, job_id: str, next_retry_at: str, 
-                              error_message: Optional[str] = None) -> bool:
-        """Increment job attempt count and schedule retry"""
+    def schedule_retry(self, job_id: str, next_retry_at: str, 
+                      error_message: Optional[str] = None) -> bool:
+        """Schedule job for retry (attempts already incremented on claim)"""
         now = datetime.utcnow().isoformat()
         
         with self._get_cursor() as cursor:
             cursor.execute("""
                 UPDATE jobs 
-                SET attempts = attempts + 1, 
-                    next_retry_at = ?,
+                SET next_retry_at = ?,
                     updated_at = ?,
                     error_message = ?,
                     worker_id = '',

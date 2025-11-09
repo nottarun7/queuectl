@@ -160,7 +160,8 @@ class Queue:
         if not job:
             return {'action': 'error', 'message': 'Job not found'}
         
-        attempts = job['attempts'] + 1
+        # Attempts already incremented when job was claimed
+        attempts = job['attempts']
         max_retries = job['max_retries']
         
         if attempts >= max_retries:
@@ -175,7 +176,8 @@ class Queue:
             backoff_delay = self.config.calculate_backoff_delay(attempts)
             next_retry_at = (datetime.utcnow() + timedelta(seconds=backoff_delay)).isoformat()
             
-            self.storage.increment_job_attempts(
+            # Schedule retry without incrementing attempts (already done on claim)
+            self.storage.schedule_retry(
                 job_id=job_id,
                 next_retry_at=next_retry_at,
                 error_message=error_message

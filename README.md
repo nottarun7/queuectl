@@ -4,15 +4,15 @@ A CLI-based background job queue system built with Python, featuring automatic r
 
 ## Features
 
-✅ **CLI-Based Interface** - Easy-to-use command-line interface  
-✅ **Background Job Processing** - Multiple worker processes execute jobs concurrently  
-✅ **Automatic Retries** - Configurable retry logic with exponential backoff  
-✅ **Dead Letter Queue** - Failed jobs moved to DLQ after max retries  
-✅ **Persistent Storage** - SQLite-based persistence survives restarts  
-✅ **Graceful Shutdown** - Workers handle shutdown signals properly  
-✅ **Configurable Settings** - Adjust retry policies, timeouts, and more  
-✅ **Job State Tracking** - Monitor job status (pending, processing, completed, failed, dlq)  
-✅ **Worker Management** - Start/stop multiple workers dynamically
+**CLI-Based Interface** - Easy-to-use command-line interface  
+**Background Job Processing** - Multiple worker processes execute jobs concurrently  
+**Automatic Retries** - Configurable retry logic with exponential backoff  
+**Dead Letter Queue** - Failed jobs moved to DLQ after max retries  
+**Persistent Storage** - SQLite-based persistence survives restarts  
+**Graceful Shutdown** - Workers handle shutdown signals properly  
+**Configurable Settings** - Adjust retry policies, timeouts, and more  
+**Job State Tracking** - Monitor job status (pending, processing, completed, failed, dlq)  
+**Worker Management** - Start/stop multiple workers dynamically
 
 ## Architecture
 

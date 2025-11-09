@@ -1,0 +1,4 @@
+{
+  "id": "job1",
+  "command": "python -c \"import time; time.sleep(2); print('hello')\""
+}
